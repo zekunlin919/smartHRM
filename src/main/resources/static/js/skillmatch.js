@@ -18,11 +18,11 @@ function loadMetaData(){
     // ② 项目 map
     fetch('/skillmatch/projects')
         .then(r=>r.json())
-        .then(list=> list.forEach(p=> projectMap[p._id] = p.projName) );
+        .then(list=> list.forEach(p=> projectMap[p.id] = p.projName) );
     // ③ 部门 map
     fetch('/skillmatch/departments')
         .then(r=>r.json())
-        .then(list=> list.forEach(d=> depMap[d._id] = d.depName) );
+        .then(list=> list.forEach(d=> depMap[d.id] = d.depName) );
 }
 
 /* ==========  动态增删筛选行（重写）  ========== */
@@ -113,16 +113,17 @@ function renderTable(list){
         const tr = document.createElement('tr');
 
         // 技能列：拼成 "Java-4, MySQL-3"
-        const skillTexts = Object.entries(emp.skillList||{})
-            .map(([id,lv])=>{
-                const skill = skillOptions.find(s=>s._id==id);
-                const name = skill ? skill.skillName : '未知技能';   // ← 保证取名字
-                return `${name} - 熟练度:${lv}`;
-            }).join('<br>');
+        const skillTexts = (emp.skillList || [])
+            .map(item => {
+                const skill = skillOptions.find(s => s._id == item.skillId);
+                const name  = skill ? skill.skillName : '未知技能';
+                return `${name} - 熟练度:${item.proficiency}`;
+            })
+            .join('<br>');
 
         // 项目列：拼成 "订单系统, 支付中心"
-        const projTexts = (emp.projects||[])
-            .map(pid=> projectMap[pid] || ('项目'+pid) )
+        const projTexts = (emp.projects || [])
+            .map(item => projectMap[item.projId] || `项目${item.projId}`)
             .join('<br>');
 
         tr.innerHTML = `

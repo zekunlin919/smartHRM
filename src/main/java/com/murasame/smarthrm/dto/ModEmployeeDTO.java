@@ -1,24 +1,24 @@
 package com.murasame.smarthrm.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
 
 @Data
 public class ModEmployeeDTO {
-	@NotNull(message = "id不可为空")
-	private int id;
+    @NotNull(message = "员工ID不能为空")
+    private Integer id;
 
-	@NotBlank(message = "名字不可为空")
-	private String name;
+    @NotNull(message = "员工姓名不能为空")
+    private String name;
 
-	@NotBlank(message = "部门不可为空")
-	private String department;
+    @NotNull(message = "部门ID不能为空")
+    private String department;
 
-	List<Map<Integer, Integer>> skills;  // 技能及其熟练度列表（暂均用id）
+    private String skills; // 格式：skillId:熟练度,skillId:熟练度
 
-	List<Integer> projects;              // 负责项目
+    private String projects; // 格式：项目ID,项目ID
+
+    private LocalDateTime joinDate;
 }

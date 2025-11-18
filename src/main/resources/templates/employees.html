@@ -1,10 +1,62 @@
 <!doctype html>
-<html lang="zh">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <title>员工管理</title>
+    <style>
+        table { border-collapse: collapse; margin: 20px 0; }
+        table, th, td { border: 1px solid #333; padding: 8px 12px; }
+        .message { color: green; margin: 10px 0; }
+        .error { color: red; margin: 10px 0; }
+        button { background: #f44336; color: white; border: none; padding: 5px 10px; cursor: pointer; }
+        .edit-btn { background: #2196F3; margin-left: 5px; }
+    </style>
 </head>
 <body>
-    <h1>员工管理</h1>
+<h1>员工管理</h1>
+
+<!-- 操作结果提示 -->
+<div class="message" th:if="${message}" th:text="${message}"></div>
+<div class="error" th:if="${error}" th:text="${error}"></div>
+
+<!-- 员工列表表格（展示所有属性） -->
+<table>
+    <tr>
+        <th>员工ID</th>
+        <th>姓名</th>
+        <th>部门ID</th>
+        <th>技能列表</th>
+        <th>项目列表</th>
+        <th>加入时间</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="emp : ${employees}">
+        <td th:text="${emp._id}">1</td>
+        <td th:text="${emp.empName}">张三</td>
+        <td th:text="${emp.depId}">1</td>
+        <td>
+            <ul th:each="skill : ${emp.skillList}">
+                <li th:text="'技能ID: ' + ${skill.skillId} + ', 熟练度: ' + ${skill.proficiency}"></li>
+            </ul>
+        </td>
+        <td>
+            <ul th:each="proj : ${emp.projects}">
+                <li th:text="'项目ID: ' + ${proj.projId}"></li>
+            </ul>
+        </td>
+        <td th:text="${emp.joinDate}">2025-11-17</td>
+        <td>
+            <!-- 删除按钮 -->
+            <form th:action="@{/employees/del}" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${emp._id}">
+                <button type="submit" onclick="return confirm('确定删除吗？')">删除</button>
+            </form>
+            <!-- 编辑按钮：修正链接参数语法 -->
+            <a th:href="@{/employees/mod(id=${emp._id})}">
+                <button class="edit-btn">编辑</button>
+            </a>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
