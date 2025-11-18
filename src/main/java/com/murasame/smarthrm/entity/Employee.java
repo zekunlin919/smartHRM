@@ -18,7 +18,7 @@ public class Employee {
 	private Integer _id;
 	private String empName;
 	private Integer depId;
-	private Map<String, Integer> skillList;  // 员工拥有技能: [{技能id, 熟练度}...]
-	private List<Integer> projects;                 // 员工参与项目: [项目id...]
+	private List<Map<String, Integer>> skillList;  // 员工拥有技能: [{技能id, 熟练度}...]
+    private List<Map<String, Integer>> projects;                 // 员工参与项目: [项目id...]
 	private LocalDateTime joinDate;                 // 加入时间
 }

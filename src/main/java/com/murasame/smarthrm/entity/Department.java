@@ -4,15 +4,29 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.util.List;
 
 @Data
-@Document(collection = "Department") // 对应MongoDB中的集合名
+@Document(collection = "Department")
 public class Department {
-	@Id               // ← 告诉 Spring Data 这是主键
-	@Field("_id")     // ← 强制映射文档字段 "_id"
-	private Integer _id;
+
+	@Id
+	private Integer id;          // 对应 _id
+
+	@Field("depName")
 	private String depName;
-	private Integer managerId;
-	private List<Integer> empList;
+
+	@Field("managerId")
+	private Integer managerId;   // 部门负责人ID
+
+	@Field("empList")
+	private List<EmpRef> empList;
+
+	/* ===== 嵌套对象：仅存 empId ===== */
+	@Data
+	public static class EmpRef {
+		@Field("empId")
+		private Integer empId;
+	}
 }
