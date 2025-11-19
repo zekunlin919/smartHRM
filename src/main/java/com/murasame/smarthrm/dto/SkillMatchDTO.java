@@ -2,6 +2,7 @@ package com.murasame.smarthrm.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.util.Arrays;
