@@ -11,7 +11,7 @@ import java.util.Map;
 
 // 数据库实体
 @Data
-@Document(collection = "Employees") // 对应MongoDB中的集合名
+@Document(collection = "Employee") // 对应MongoDB中的集合名
 public class Employee {
     @Id               // ← 告诉 Spring Data 这是主键
     @Field("_id")     // ← 强制映射文档字段 "_id"
