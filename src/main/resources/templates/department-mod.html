@@ -88,7 +88,7 @@
                     <select class="form-control" id="managerSelect" th:field="*{managerId}">
                         <option value="">空（请选择负责人，需先选择部门员工）</option>
                         <option th:each="emp : ${allEmps}"
-                                th:value="${emp.id}"
+                                th:value="${emp._id}"
                                 th:text="${emp.empName}">员工姓名</option>
                     </select>
                 </div>
@@ -98,7 +98,7 @@
                     <!-- 带搜索的多选框，支持大量员工快速选择 -->
                     <select class="form-control" id="empSelect" multiple="multiple" name="empIds">
                         <option th:each="emp : ${allEmps}"
-                                th:value="${emp.id}"
+                                th:value="${emp._id}"
                                 th:selected="${selectedEmps != null && selectedEmps.contains(emp)}"
                                 th:text="${emp.empName}">员工姓名</option>
                     </select>
