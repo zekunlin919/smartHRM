@@ -95,9 +95,7 @@ java -jar xxx.jar
 
 ## 许可证
 
-```markdown
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-```
 
 ## 初版演示（未样式统一）
 
