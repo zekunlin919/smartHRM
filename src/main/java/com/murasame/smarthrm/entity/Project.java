@@ -25,7 +25,7 @@ public class Project {
 	private List<ReqSkill> reqSkill;
 
 	@Field("projStatus")
-	private Integer projStatus;
+	private Integer projStatus;//0-未归档 1-已归档
 
 	@Field("startDate")
 	private LocalDateTime startDate;

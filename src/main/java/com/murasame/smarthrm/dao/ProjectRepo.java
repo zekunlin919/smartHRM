@@ -12,4 +12,26 @@ import java.util.List;
  */
 @Repository
 public interface ProjectRepo extends MongoRepository<Project, Integer> {
+    boolean existsByProjName(String projName);
+    // 根据项目名称模糊查询
+    List<Project> findByProjNameContaining(String name);
+    // 根据项目状态查询
+    List<Project> findByProjStatus(Integer projStatus);
+
+    // ========== 项目管理辅助方法 ==========
+
+    /**
+     * 根据项目状态和名称查询
+     */
+    List<Project> findByProjStatusAndProjNameContaining(Integer projStatus, String name);
+
+    /**
+     * 查找所有未归档的项目
+     */
+    List<Project> findByProjStatusOrderByStartDateDesc(Integer projStatus);
+
+    /**
+     * 按启动时间降序排列所有项目
+     */
+    List<Project> findAllByOrderByStartDateDesc();
 }

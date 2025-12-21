@@ -2,8 +2,10 @@ package com.murasame.smarthrm.service.impl;
 
 import com.murasame.smarthrm.dao.EmployeeRepo;
 import com.murasame.smarthrm.dao.ProjectRepo;
+import com.murasame.smarthrm.dao.TaskRepo;
 import com.murasame.smarthrm.entity.Employee;
 import com.murasame.smarthrm.entity.Project;
+import com.murasame.smarthrm.entity.Task;
 import com.murasame.smarthrm.service.ProjectMatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class ProjectMatchServiceImpl implements ProjectMatchService {
 
     private final ProjectRepo projectRepo;
     private final EmployeeRepo employeeRepo;
+    private final TaskRepo taskRepo;
 
     @Override
     public List<Project> matchByProjectName(String projectName) {
@@ -195,5 +198,126 @@ public class ProjectMatchServiceImpl implements ProjectMatchService {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Project createProject(Project project) {
+        if (project == null) {
+            throw new IllegalArgumentException("项目信息不能为空");
+        }
+
+        // 检查项目名称是否重复
+        if (project.getProjName() != null && projectRepo.existsByProjName(project.getProjName())) {
+            throw new IllegalArgumentException("项目名称已存在");
+        }
+
+        // 生成新的ID（如果需要）
+        if (project.getId() == null) {
+            // 获取当前最大ID + 1
+            List<Project> allProjects = projectRepo.findAll();
+            Integer maxId = allProjects.stream()
+                    .map(Project::getId)
+                    .filter(Objects::nonNull)
+                    .max(Integer::compareTo)
+                    .orElse(0);
+            project.setId(maxId + 1);
+        }
+
+        return projectRepo.save(project);
+    }
+
+    @Override
+    public Project updateProject(Project project) {
+        if (project == null || project.getId() == null) {
+            throw new IllegalArgumentException("项目ID和项目信息不能为空");
+        }
+
+        // 检查项目是否存在
+        Project existingProject = projectRepo.findById(project.getId()).orElse(null);
+        if (existingProject == null) {
+            throw new IllegalArgumentException("项目不存在");
+        }
+
+        // 检查项目名称是否重复（排除当前项目）
+        if (project.getProjName() != null && !project.getProjName().equals(existingProject.getProjName())) {
+            if (projectRepo.existsByProjName(project.getProjName())) {
+                throw new IllegalArgumentException("项目名称已存在");
+            }
+        }
+
+        return projectRepo.save(project);
+    }
+
+    @Override
+    public boolean deleteProject(Integer projectId) {
+        if (projectId == null) {
+            return false;
+        }
+
+        // 检查项目是否存在
+        if (!projectRepo.existsById(projectId)) {
+            return false;
+        }
+
+        try {
+            projectRepo.deleteById(projectId);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public Project getProjectById(Integer projectId) {
+        if (projectId == null) {
+            return null;
+        }
+        return projectRepo.findById(projectId).orElse(null);
+    }
+
+    @Override
+    public Map<String, Object> getProjectWithTasks(Integer projectId) {
+        if (projectId == null) {
+            return new HashMap<>();
+        }
+
+        // 获取项目信息
+        Project project = projectRepo.findById(projectId).orElse(null);
+        if (project == null) {
+            return new HashMap<>();
+        }
+
+        // 获取项目任务
+        List<Task> tasks = taskRepo.findByProjId(projectId);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("project", project);
+        result.put("tasks", tasks);
+        result.put("taskCount", tasks.size());
+        result.put("completedTasks", tasks.stream().filter(task -> task.getTaskStatus() == 1).count());
+        result.put("pendingTasks", tasks.stream().filter(task -> task.getTaskStatus() == 0).count());
+
+        return result;
+    }
+
+    @Override
+    public List<Map<String, Object>> getProjectsWithTasks(List<Project> projects) {
+        if (projects == null || projects.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return projects.stream().map(project -> {
+            Map<String, Object> projectWithTasks = new HashMap<>();
+            projectWithTasks.put("project", project);
+
+            // 获取项目任务
+            List<Task> tasks = taskRepo.findByProjId(project.getId());
+            projectWithTasks.put("tasks", tasks);
+            projectWithTasks.put("taskCount", tasks.size());
+            projectWithTasks.put("completedTasks", tasks.stream().filter(task -> task.getTaskStatus() == 1).count());
+            projectWithTasks.put("pendingTasks", tasks.stream().filter(task -> task.getTaskStatus() == 0).count());
+
+            return projectWithTasks;
+        }).collect(Collectors.toList());
     }
 }

@@ -12,5 +12,5 @@ public class Task {
 	private Integer projId;     // 外键约束 项目内的任务
 	private String taskName;
 	private Integer managerId;
-	private Integer taskStatus;
+	private Integer taskStatus;//0-未完成 1-已完成
 }
