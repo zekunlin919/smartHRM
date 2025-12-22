@@ -1236,8 +1236,103 @@ function showTasksAlert(message, type = 'info') {
  * 编辑任务
  */
 function editTask(taskId) {
-    // TODO: 实现任务编辑功能
-    showTasksAlert('任务编辑功能待实现', 'info');
+    // 查找当前任务
+    const task = currentProjectTasks.find(t => (t._id || t.id) == taskId);
+    if (!task) {
+        showTasksAlert('任务不存在', 'danger');
+        return;
+    }
+
+    // 设置模态框标题
+    document.getElementById('editTaskModalTitle').textContent = `编辑任务: ${task.taskName || '未命名任务'}`;
+
+    // 填充表单数据
+    document.getElementById('editTaskId').value = task._id || task.id;
+    document.getElementById('editTaskProjId').value = task.projId;
+    document.getElementById('editTaskName').value = task.taskName || '';
+    document.getElementById('editTaskManagerId').value = task.managerId || '';
+    document.getElementById('editTaskStatus').value = task.taskStatus || 0;
+
+    // 清空提示信息
+    document.getElementById('editTaskModalAlert').style.display = 'none';
+
+    // 显示模态框
+    document.getElementById('editTaskModal').style.display = 'block';
+}
+
+/**
+ * 关闭任务编辑模态框
+ */
+function closeEditTaskModal() {
+    document.getElementById('editTaskModal').style.display = 'none';
+}
+
+/**
+ * 保存编辑的任务
+ */
+async function saveEditTask() {
+    // 验证表单
+    const taskName = document.getElementById('editTaskName').value.trim();
+    if (!taskName) {
+        showEditTaskAlert('请输入任务名称', 'danger');
+        return;
+    }
+
+    // 获取编辑后的任务数据
+    const taskData = {
+        _id: parseInt(document.getElementById('editTaskId').value),
+        projId: parseInt(document.getElementById('editTaskProjId').value),
+        taskName: taskName,
+        managerId: document.getElementById('editTaskManagerId').value ?
+            parseInt(document.getElementById('editTaskManagerId').value) : null,
+        taskStatus: parseInt(document.getElementById('editTaskStatus').value)
+    };
+
+    try {
+        const response = await fetch('/projectmatch/tasks/update', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(taskData)
+        });
+
+        if (response.ok) {
+            showEditTaskAlert('任务修改成功', 'success');
+
+            // 延迟关闭模态框并刷新任务列表
+            setTimeout(() => {
+                closeEditTaskModal();
+                // 重新加载项目任务
+                if (currentProjectId) {
+                    loadProjectTasks(currentProjectId);
+                }
+            }, 1500);
+
+        } else {
+            const error = await response.text();
+            showEditTaskAlert('修改失败: ' + error, 'danger');
+        }
+    } catch (error) {
+        showEditTaskAlert('网络错误: ' + error.message, 'danger');
+    }
+}
+
+/**
+ * 显示任务编辑提示信息
+ */
+function showEditTaskAlert(message, type = 'info') {
+    const alertDiv = document.getElementById('editTaskModalAlert');
+    alertDiv.className = `alert alert-${type}`;
+    alertDiv.textContent = message;
+    alertDiv.style.display = 'block';
+
+    // 3秒后自动隐藏（除了成功消息）
+    if (type !== 'success') {
+        setTimeout(() => {
+            alertDiv.style.display = 'none';
+        }, 3000);
+    }
 }
 
 /**

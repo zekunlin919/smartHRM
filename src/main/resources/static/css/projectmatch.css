@@ -549,3 +549,66 @@ tr:hover {
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;
 }
+
+/* ========== 任务编辑模态框样式 ========== */
+#editTaskModal .modal-content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+#editTaskModal .form-control[readonly] {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+#editTaskModal .form-group {
+    margin-bottom: 20px;
+}
+
+#editTaskModal .form-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+
+#editTaskModal .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+#editTaskModal .modal-header {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px 8px 0 0;
+    margin: -10px -10px 20px -10px;
+}
+
+#editTaskModal .modal-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+#editTaskModal .close {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    opacity: 0.8;
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 12px;
+}
+
+#editTaskModal .close:hover {
+    opacity: 1;
+}

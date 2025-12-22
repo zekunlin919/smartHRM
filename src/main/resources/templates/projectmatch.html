@@ -572,6 +572,56 @@
     </div>
 </div>
 
+<!-- 任务编辑模态框 -->
+<div id="editTaskModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3 class="modal-title" id="editTaskModalTitle">编辑任务</h3>
+            <button class="close" onclick="closeEditTaskModal()">&times;</button>
+        </div>
+
+        <div id="editTaskModalAlert" style="display: none;"></div>
+
+        <form id="editTaskForm">
+            <div class="form-group">
+                <label class="form-label">任务ID</label>
+                <input type="number" id="editTaskId" class="form-control" readonly>
+                <small class="form-text text-muted">任务ID（只读）</small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">项目ID</label>
+                <input type="number" id="editTaskProjId" class="form-control" readonly>
+                <small class="form-text text-muted">所属项目ID（只读）</small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">任务名称 *</label>
+                <input type="text" id="editTaskName" class="form-control" required placeholder="请输入任务名称">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">负责人ID</label>
+                <input type="number" id="editTaskManagerId" class="form-control" placeholder="请输入负责人员工ID（如：101）">
+                <small class="form-text text-muted">输入负责人的员工ID</small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">任务状态</label>
+                <select id="editTaskStatus" class="form-control">
+                    <option value="0">未完成</option>
+                    <option value="1">已完成</option>
+                </select>
+            </div>
+        </form>
+
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="closeEditTaskModal()">取消</button>
+            <button type="button" class="btn-primary" onclick="saveEditTask()">保存修改</button>
+        </div>
+    </div>
+</div>
+
 <script src="/js/projectmatch.js"></script>
 </body>
 </html>
